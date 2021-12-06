@@ -1,10 +1,19 @@
 import fetch from "node-fetch";
-
+import fs from 'fs';
 // module.exports = () => {
 //   // ...
 // };
 //usar fetch
-fetch('http://example.com/movies.json')
-  .then(response => console.log(response.status))
-  .catch(error => console.log(error.code))
-  //hola
+// 
+
+//node leer archivo
+
+fs.readFile('README.md', 'utf8' , (err, data) => {
+  if (err) {
+    console.error(err)
+    return
+  }
+  let links = data.match(/(http|ftp|https):\/\/([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:\/~+#-]*[\w@?^=%&\/~+#-])/gi)
+  console.log(links);
+  
+})
