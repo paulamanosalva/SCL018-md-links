@@ -21,8 +21,7 @@ const readFileData = (fileToRead) => {
 };
 const searchLinks = async (data) => {
   const matchLinks = data.matchAll( /(?<!\!)\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g);// constante que compara la data con los link
-   //array vacío para guardar la info
- //loop del matchAll, pushea los links en la constante
+
    async function pushData(){
      try {
       const allLinks = []
@@ -58,21 +57,6 @@ async function validateLinks(url) {
   const linkStatus = await response.status;
   return linkStatus;
 }
-
-
-// const validateLinks = (allLinks) => {
-//   for(let i = 0; i<allLinks.length; i++){
-//     let url = allLinks.data.href;
-//     fetch(url)
-//     .then((response) =>{
-//     console.log(response.status);
-//     })  
-//     .catch((error) => console.log(error));
-//   }
- 
-// }
- 
-
  
 
 
