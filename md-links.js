@@ -6,7 +6,7 @@ const userPath = process.argv[2];
 let validate = true;
 let stats = false;
 
-const readFileData = (fileToRead) => {
+const readFileData = async (fileToRead) => {
   const extension = path.extname(fileToRead);//guarda le ext del archivo en una variable
   if (extension === '.md') { //verifica si el archivo es md
     fs.readFile(fileToRead, 'utf8', (err, data) => { //si es md --> lee el contenido del archivo 
@@ -62,8 +62,8 @@ async function validateLinks(url) {
 
 
 
-const mdLinks = (userInput, options) => {
-  readFileData(userInput);
+const mdLinks = async (userInput, options) => {
+  const result = await readFileData(userInput);
 }
 
 mdLinks(userPath); //al correr el archivo se ejecuta mdLinks con el archivo que entrega el user
