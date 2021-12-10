@@ -3,7 +3,8 @@ import fs from 'fs';
 import path from "path";
 
 const userPath = process.argv[2];
-
+let validate = true;
+let stats = false;
 
 const readFileData = (fileToRead) => {
   const extension = path.extname(fileToRead);//guarda le ext del archivo en una variable
@@ -18,23 +19,65 @@ const readFileData = (fileToRead) => {
     console.log('el archivo no es markdown');    
   }
 };
-const searchLinks = (data) => {
+const searchLinks = async (data) => {
   const matchLinks = data.matchAll( /(?<!\!)\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g);// constante que compara la data con los link
-  const allLinks = []; //array vacío para guardar la info
-  for (const match of matchLinks) { //loop del matchAll, pushea los links en la constante
-    allLinks.push(
-      {
-      href: match[2], //matchAll entrega un array con todas las coincidencias, la url queda en el index 2, el texto del link en el 1 y el userpath en 0
-      text: match[1],
-      file: userPath, 
+   //array vacío para guardar la info
+ //loop del matchAll, pushea los links en la constante
+   async function pushData(){
+     try {
+      const allLinks = []
+       for (const match of matchLinks) { 
+       let res = await validateLinks(match[2]);
+       const data = {
+        href: match[2],
+        text: match[1],
+        file: userPath,
+        status: res,
+      }; 
+      
+      allLinks.push(data);
+      console.log(allLinks);
     }
-    );
-  }
-  return allLinks;
+    return allLinks
+     }
+     catch(e){
+      console.log(e);
+    }
+   
+   }
+  let result = await pushData();
+  return result;
+  
 };
 
 
-const mdLinks = (userInput) => {
+
+
+async function validateLinks(url) {
+  const response = await fetch(url);
+  const linkStatus = await response.status;
+  return linkStatus;
+}
+
+
+// const validateLinks = (allLinks) => {
+//   for(let i = 0; i<allLinks.length; i++){
+//     let url = allLinks.data.href;
+//     fetch(url)
+//     .then((response) =>{
+//     console.log(response.status);
+//     })  
+//     .catch((error) => console.log(error));
+//   }
+ 
+// }
+ 
+
+ 
+
+
+
+const mdLinks = (userInput, options) => {
   readFileData(userInput);
 }
 
