@@ -23,8 +23,9 @@ const searchLinks = async (data) => {
   const matchLinks = data.matchAll( /(?<!\!)\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g);// constante que compara la data con los link
 
    async function pushData(){
-     try {
-      const allLinks = []
+    const allLinks = [] 
+    try {
+      
        for (const match of matchLinks) { 
        let res = await validateLinks(match[2]);
        const data = {
@@ -35,9 +36,9 @@ const searchLinks = async (data) => {
       }; 
       
       allLinks.push(data);
-      console.log(allLinks);
+      return allLinks
     }
-    return allLinks
+    
      }
      catch(e){
       console.log(e);
