@@ -37,7 +37,7 @@ const searchLinks = (data) => {
 
 const fetchLinks = (url) =>{
   return fetch(url)
-    .then(response => {status: response.status});
+    .then(response => response.status);
 }
 
 const validateLinks = (links) => {
@@ -52,8 +52,6 @@ const fetched = []
 
 };
 
-        
-
 function mdLinks(fileToRead){
   return new Promise((resolve, reject)=>{
     const links = readFileData(fileToRead);
@@ -61,15 +59,15 @@ function mdLinks(fileToRead){
       resolve(links)
     }
     else {
-    links.forEach((link, index) =>{
-      Object.assign(link, validateLinks(links)[index])
-    })
-    resolve(links);
-    
+      
+      resolve(validateLinks(links)); 
     }
     
-  })
-}
+    
+    })
+    
+  }
+
 
   mdLinks(userPath)
   .then(results => console.log(results))
