@@ -1,10 +1,32 @@
 import fetch from "node-fetch";
-import fs from 'fs';
-import path, { resolve } from "path";
-import { url } from "inspector";
+import fs, { readdirSync } from 'fs';
+import path from "path";
+
 const userPath = process.argv[2];
 let validate = true;
 // let stats = false;
+//es o no directorio
+const isDirectory = (userPath)=>{
+  try {
+    const stats = fs.statSync(userPath)
+    return stats.isDirectory();
+  } catch (err) {
+    console.error(err)
+  }
+};
+// es o no un archivo
+const isFile = fileName => {
+  return fs.lstatSync(fileName).isFile()
+}
+//leer directorio (retorna archivos en array)
+
+  // console.log(folderPath);
+  fs.readdirSync(userPath).map(fileName => {
+  const abs = path.join(userPath, fileName)
+  return abs
+})
+// console.log(readDirectory(userPath));
+
 //leer archivo
 const readFileData = (fileToRead) => {
   const extension = path.extname(fileToRead);//guarda le ext del archivo en una variable
@@ -48,13 +70,35 @@ const validateLinks = (links) => {
 
 function mdLinks(fileToRead){
   return new Promise((resolve, reject)=>{
-    const links = readFileData(fileToRead);
-    if(!validate){
-      resolve(links)
+    //console.log(fileToRead)
+    // resolve(fileToRead)
+    // if(isDirectory(userPath)){
+    //     console.log('Es directorio');
+    //     //const files = readDirectory(userPath)
+    //     //resolve(files)
+    //   }else{
+    //     console.log('No es válido');
+    //   }
+
+    if(isFile(userPath)){
+      const links = readFileData(fileToRead);
+      if(!validate){
+        resolve(links)
+      }
+      else {
+        resolve(validateLinks(links)); 
+      }
     }
-    else {
-      resolve(validateLinks(links)); 
+    else if(isDirectory(userPath)){
+      console.log('Entra al elseif');
+      const files = readdirSync(userPath)
+      console.log(files)
+      // resolve(files)
+    }else{
+      console.log('No es válido');
     }
+
+    
     })
     
   }
