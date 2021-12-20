@@ -1,12 +1,9 @@
 import fetch from "node-fetch";
 import fs, { readdirSync } from 'fs';
 import path from "path";
-import Yargs from "yargs";
 
-
-const options = Yargs(process.argv.slice(2)).argv;
-
-const userPath = process.argv[2]
+const userPath = process.argv[2];
+let validate = true;
 // let stats = false;
 //es o no directorio
 const isDirectory = (userPath)=>{
@@ -22,23 +19,12 @@ const isFile = fileName => {
   return fs.lstatSync(fileName).isFile()
 }
 //leer directorio (retorna archivos en array)
-const syncReadDir = () =>{
-  let absPath = []
-  return fs.readdirSync(userPath).map(fileName => {
-   absPath.push(path.join(userPath, fileName))
-
-   return absPath.forEach((file) => {
-     console.log(readFileData(file));// aqui hay un problema de retorno
-    })
-    })
-    
-    
-}
 
   // console.log(folderPath);
-
-
- 
+  fs.readdirSync(userPath).map(fileName => {
+  const abs = path.join(userPath, fileName)
+  return abs
+})
 // console.log(readDirectory(userPath));
 
 //leer archivo
@@ -84,10 +70,19 @@ const validateLinks = (links) => {
 
 function mdLinks(fileToRead){
   return new Promise((resolve, reject)=>{
-   
+    //console.log(fileToRead)
+    // resolve(fileToRead)
+    // if(isDirectory(userPath)){
+    //     console.log('Es directorio');
+    //     //const files = readDirectory(userPath)
+    //     //resolve(files)
+    //   }else{
+    //     console.log('No es válido');
+    //   }
+
     if(isFile(userPath)){
       const links = readFileData(fileToRead);
-      if(!options.validate){
+      if(!validate){
         resolve(links)
       }
       else {
@@ -95,10 +90,10 @@ function mdLinks(fileToRead){
       }
     }
     else if(isDirectory(userPath)){
-      //aqui falta condicional para validar pero primero necesito arreglar el retorno de syncReadDir
-      const files = syncReadDir(userPath)
+      console.log('Entra al elseif');
+      const files = readdirSync(userPath)
       console.log(files)
-      resolve(files)
+      // resolve(files)
     }else{
       console.log('No es válido');
     }
